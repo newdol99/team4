@@ -1,7 +1,6 @@
 <img src="https://raw.githubusercontent.com/newdol99/team4/main/img/logo.jpg"  width="300" height="300"/>
                                                                                                     
 <img src="images/logo.jpg"  width="300" height="300"/>                                                                                                    
-<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/1.order1.JPG"  width="600" height="400"/>
 
 # 꽃배달서비스
 
