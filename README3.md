@@ -97,25 +97,25 @@
 
 
 ### 이벤트 도출
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design1.jpg)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design1.PNG)
 
 ### 부적격 이벤트 탈락
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design2.jpg)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design2.PNG)
 
     - 과정중 도출된 잘못된 도메인 이벤트들을 걸러내는 작업을 수행함
         - 주문시>메뉴카테고리선택됨, 주문시>메뉴검색됨 :  UI 의 이벤트이지, 업무적인 의미의 이벤트가 아니라서 제외
 
 ### 액터, 커맨드 부착하여 읽기 좋게
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design3.jpg)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design3.PNG)
 
 ### 어그리게잇으로 묶기
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design4.jpg)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design4.PNG)
 
     - app의 Order, store 의 주문처리, 결제의 결제이력은 그와 연결된 command 와 event 들에 의하여 트랜잭션이 유지되어야 하는 단위로 그들 끼리 묶어줌
 
 ### 바운디드 컨텍스트로 묶기
 
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design5.jpg)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design5.PNG)
 
     - 도메인 서열 분리 
         - Core Domain:  app(front), store : 없어서는 안될 핵심 서비스이며, 연견 Up-time SLA 수준을 99.999% 목표, 배포주기는 app 의 경우 1주일 1회 미만, store 의 경우 1개월 1회 미만
@@ -124,32 +124,32 @@
 
 ### 폴리시 부착 (괄호는 수행주체, 폴리시 부착을 둘째단계에서 해놔도 상관 없음. 전체 연계가 초기에 드러남)
 
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design6.jpg)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design6.PNG)
 
 ### 폴리시의 이동과 컨텍스트 매핑 (점선은 Pub/Sub, 실선은 Req/Resp)
 
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design7.jpg)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design7.PNG)
 
 ### 완성된 1차 모형
 
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design8.jpg)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design8.PNG)
 
     - View Model 추가
 
 ### 1차 완성본에 대한 기능적/비기능적 요구사항을 커버하는지 검증
 
-![image](https://user-images.githubusercontent.com/487999/79684167-3ecd2f00-826a-11ea-806a-957362d197e3.png)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design9.PNG)
 
     - 고객이 메뉴를 선택하여 주문한다 (ok)
     - 고객이 결제한다 (ok)
     - 주문이 되면 주문 내역이 입점상점주인에게 전달된다 (ok)
-    - 상점주인이 확인하여 요리해서 배달 출발한다 (ok)
+    - 상점주인이 확인하여 포장하고 배달 출발한다 (ok)
 
-![image](https://user-images.githubusercontent.com/487999/79684170-47256a00-826a-11ea-9777-e16fafff519a.png)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design10.PNG)
     - 고객이 주문을 취소할 수 있다 (ok)
     - 주문이 취소되면 배달이 취소된다 (ok)
     - 고객이 주문상태를 중간중간 조회한다 (View-green sticker 의 추가로 ok) 
-    - 주문상태가 바뀔 때 마다 카톡으로 알림을 보낸다 (?)
+    - 주문상태가 바뀔 때 마다 알림을 보낸다 (?)
 
 
 ### 모델 수정
