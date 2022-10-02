@@ -97,25 +97,25 @@
 
 
 ### 이벤트 도출
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design1.PNG)
+<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design1.PNG"  width="600" height="240"/>
 
 ### 부적격 이벤트 탈락
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design2.PNG)
+<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design2.PNG"  width="600" height="240"/>
 
     - 과정중 도출된 잘못된 도메인 이벤트들을 걸러내는 작업을 수행함
         - 주문시>메뉴카테고리선택됨, 주문시>메뉴검색됨 :  UI 의 이벤트이지, 업무적인 의미의 이벤트가 아니라서 제외
 
 ### 액터, 커맨드 부착하여 읽기 좋게
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design3.PNG)
+<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design3.PNG"  width="700" height="320"/>
 
 ### 어그리게잇으로 묶기
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design4.PNG)
+<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design4.PNG"  width="700" height="320"/>
 
     - app의 Order, store 의 주문처리, 결제의 결제이력은 그와 연결된 command 와 event 들에 의하여 트랜잭션이 유지되어야 하는 단위로 그들 끼리 묶어줌
 
 ### 바운디드 컨텍스트로 묶기
 
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design5.PNG)
+<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design5.PNG"  width="700" height="320"/>
 
     - 도메인 서열 분리 
         - Core Domain:  app(front), store : 없어서는 안될 핵심 서비스이며, 연견 Up-time SLA 수준을 99.999% 목표, 배포주기는 app 의 경우 1주일 1회 미만, store 의 경우 1개월 1회 미만
@@ -124,26 +124,26 @@
 
 ### 폴리시 부착 (괄호는 수행주체, 폴리시 부착을 둘째단계에서 해놔도 상관 없음. 전체 연계가 초기에 드러남)
 
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design6.PNG)
+<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design6.PNG"  width="700" height="320"/>
 
 ### 폴리시의 이동과 컨텍스트 매핑 (점선은 Pub/Sub, 실선은 Req/Resp)
 
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design7.PNG)
+<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design7.PNG"  width="700" height="320"/>
 
 ### 완성된 1차 모형
 
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design8.PNG)
+<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design8.PNG"  width="700" height="320"/>
 
 ### 1차 완성본에 대한 기능적/비기능적 요구사항을 커버하는지 검증
 
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design9.PNG)
+<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design9.PNG"  width="700" height="320"/>
 
     - 고객이 메뉴를 선택하여 주문한다 (ok)
     - 고객이 결제한다 (ok)
     - 주문이 되면 주문 내역이 입점상점주인에게 전달된다 (ok)
     - 상점주인이 확인하여 포장하고 배달 출발한다 (ok)
 
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design10.PNG)
+<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design10.PNG"  width="700" height="320"/>
     - 고객이 주문을 취소할 수 있다 (ok)
     - 주문이 취소되면 배달이 취소된다 (ok)
     - 고객이 주문상태를 중간중간 조회한다 (View-green sticker 의 추가로 ok) 
@@ -152,7 +152,7 @@
 
 ### 비기능 요구사항에 대한 검증
 
-![image](https://user-images.githubusercontent.com/487999/79684184-5c9a9400-826a-11ea-8d87-2ed1e44f4562.png)
+<img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design11.PNG"  width="700" height="320"/>
 
     - 마이크로 서비스를 넘나드는 시나리오에 대한 트랜잭션 처리
         - 고객 주문시 결제처리:  결제가 완료되지 않은 주문은 절대 받지 않는다는 경영자의 오랜 신념(?) 에 따라, ACID 트랜잭션 적용. 주문와료시 결제처리에 대해서는 Request-Response 방식 처리
