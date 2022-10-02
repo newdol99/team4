@@ -134,8 +134,6 @@
 
 ![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design8.PNG)
 
-    - View Model 추가
-
 ### 1차 완성본에 대한 기능적/비기능적 요구사항을 커버하는지 검증
 
 ![image](https://raw.githubusercontent.com/newdol99/team4/main/img/design9.PNG)
@@ -151,12 +149,6 @@
     - 고객이 주문상태를 중간중간 조회한다 (View-green sticker 의 추가로 ok) 
     - 주문상태가 바뀔 때 마다 알림을 보낸다 (?)
 
-
-### 모델 수정
-
-![image](https://user-images.githubusercontent.com/487999/79684176-4e4c7800-826a-11ea-8deb-b7b053e5d7c6.png)
-    
-    - 수정된 모델은 모든 요구사항을 커버함.
 
 ### 비기능 요구사항에 대한 검증
 
