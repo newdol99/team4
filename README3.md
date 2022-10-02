@@ -265,19 +265,32 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 
 }
 ```
-- 적용 후 REST API 의 테스트
-```
-# 주문처리
-http POST :8082/orders flowerId=1 qty=2 address="pusan" isOffline=false phoneNumber="01012345678" price="20000"
-http POST :8082/orders flowerId=1 qty=1 address="seoul" isOffline=true phoneNumber="01012345678" price="10000"
 
-# 주문취소처리
-http :8083/주문처리s orderId=1
 
-# 주문 상태 확인
-http :8082/orders/1
+# 적용 후 REST API 의 테스트
 
-```
+## 배달주문처리 
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/1.order1.JPG)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/1.order1_kafka.JPG)
+
+## 방문수령처리 
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/1.order2-offline.JPG)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/1.order2-offline_kafka.JPG)
+
+## 주문취소처리
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/3.cancel_order.JPG)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/3.cancel_order_kafka.JPG)
+
+## 주문 상태 확인
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/2.cqrs.JPG)
+
+## 배송주소확인(REQ/RES)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/4.delivery_get_address.JPG)
+
+## 에러처리(out of stock)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/4.order3_outofstock.JPG)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/4.order3_outofstock_500error.JPG)
+
 
 
 ## 폴리글랏 퍼시스턴스
