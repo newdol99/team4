@@ -1,6 +1,6 @@
-![image](https://raw.githubusercontent.com/newdol99/team4/main/img/logo.jpg)
+![image](https://raw.githubusercontent.com/newdol99/team4/main/img/logo.jpg){: width="100" height="100"}
 
-![images](images/logo.jpg)
+![images](images/logo.jpg){: width="100" height="100"}
 
 # 꽃배달서비스
 
