@@ -608,7 +608,9 @@ team4fighting이라는 secret으로 된 password 확인 가능
 
 ## 11. Liveness 설정
 - deployment-payment.yaml 에 liveness 설정 추가
-  - 
+  - 시작 후 120 초 이후 
+  - timeout 이 2초 마다 5초 간격으로 probe 하고
+  - 실패가 5번 발생하면 liveness 가 발동 합니다.
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -656,7 +658,8 @@ spec:
             periodSeconds: 5
             failureThreshold: 5
 ```
----
+
+
 
 ---
 
