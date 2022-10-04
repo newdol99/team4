@@ -607,6 +607,72 @@ team4fighting이라는 secret으로 된 password 확인 가능
 
 
 ## 11. Liveness 설정
+- spring cloud actuator 를 활성화 합니다.
+```java
+## payment/src/main/java/team/CustomHealthIndicator.java
+package team;
+
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.actuate.health.Status;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/actuator")
+public class CustomHealthIndicator implements HealthIndicator {
+
+    private final AtomicReference<Health> health = new AtomicReference<>(Health.up().build());
+
+    @Override
+    public Health health() {
+        return health.get();
+    }
+
+    @PutMapping("/up")
+    public Health up() {
+        Health up = Health.up().build();
+        this.health.set(up);
+        return up;
+    }
+
+    @PutMapping("/down")
+    public Health down() {
+        Health down = Health.down().build();
+        this.health.set(down);
+        return down;
+    }
+
+    @PutMapping("/maintenance")
+    public Health maintenance() {
+        Health maintenance = Health.status(new Status("MAINTENANCE")).build();
+        this.health.set(maintenance);
+        return maintenance;
+    }
+}
+```
+- application.xml 에 actuator 설정을 추가 합니다.
+```yaml
+## payment/src/main/resources/application.yml
+management:
+  health:
+    status:
+      order: DOWN, MAINTENANCE, UNKOWN, UP
+      http-mapping:
+        DOWN: 503
+        MAINTENANCE: 503
+        UNKNOWN: 200
+        UP: 200
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"
+```
+- 위 설정의 Application 을 재 docker build 하고 아래와 Deployment.yml을 통해서 배포 합니다.
 - deployment-payment.yaml 에 liveness 설정 추가
   - 시작 후 120 초 이후 
   - timeout 이 2초 마다 5초 간격으로 probe 하고
@@ -631,7 +697,7 @@ spec:
     spec:
       containers:
         - name: payment
-          image: ulysysdev/payment:v2
+          image: ulysysdev/payment:v5
           ports:
             - containerPort: 8080
           resources:
@@ -658,8 +724,18 @@ spec:
             periodSeconds: 5
             failureThreshold: 5
 ```
+- payment 배포 후 pod 는 정상 동작 하고 있습니다.
+![](images/liveness-06.jpg)
 
+- 해당 Pod 로 로그인하여 수동으로 서비스 상태를 down 시킵니다.
+  - 정상 상태 확인
+![](images/liveness-02.jpg)
+  - 수동으로 container를 down 시킵니다.
+![](images/liveness-03.jpg)
 
-
+- 위 상태 변화에 따라서 POD 상태는 다음과 같이 변경된 후 재기동 됩니다.
+  - RESTARTS 에 1 이 추가 되었습니다.
+  - 자동 재기동으로 POD의 모든 상태가 정상(Running) 으로 Self-Healing 되었습니다.
+![](images/liveness-07.jpg)
 ---
 
