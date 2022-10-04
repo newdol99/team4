@@ -206,7 +206,7 @@ public interface OrderService {
 
 Order 서비스의 application.yaml 파일 내 hystix를 이용한 circuit breaker 설정
 
-```
+```java
 feign:
   hystrix:
     enabled: true
