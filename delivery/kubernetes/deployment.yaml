@@ -16,9 +16,17 @@ spec:
     spec:
       containers:
         - name: delivery
-          image: tkson501/delivery:v1
+          image: tkson501/delivery:v2
           ports:
             - containerPort: 8080
+
+          env:
+            - name: _TEAM4_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: team4-pass
+                  key: password
+          
           readinessProbe:
             httpGet:
               path: '/actuator/health'
