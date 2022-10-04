@@ -603,7 +603,59 @@ spec:
 ```
 team4fighting이라는 secret으로 된 password 확인 가능
 ```
-                            
+
+
+
+## 11. Liveness 설정
+- deployment-payment.yaml 에 liveness 설정 추가
+  - 
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment
+  labels:
+    app: payment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+        ver: v3
+    spec:
+      containers:
+        - name: payment
+          image: ulysysdev/payment:v2
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 10
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'              
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+```
 ---
 
 ---
