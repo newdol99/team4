@@ -487,6 +487,7 @@ http localhost:8082/orders     # 모든 주문의 상태가 "배송됨"으로 �
 ## 5. Circuit Breaker
 
 Istio DestinationRule 설정을 통해, 장애가 감지된 서비스를 서비스 대상에서 일정시간 동안 제외(Pool Ejection)
+
 ![image](images/5.get-po-1.jpg)
 
 Circuit Braker는 아래와 같이 설치
