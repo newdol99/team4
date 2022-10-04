@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: order
-          image: tkson501/order:v1
+          image: tkson501/order:v2
           ports:
             - containerPort: 8080
           readinessProbe:
