@@ -1,4 +1,4 @@
-1. secret.yaml 파일 생성
+a. secret.yaml 파일 생성
 
 
 ```yaml
@@ -11,7 +11,7 @@ data:
   password: dGVhbTRmaWdodGluZw==
 ```
 
-2. 해당 secret을 사용할 mysql pod용 yaml 파일 생성
+b. 해당 secret을 사용할 mysql pod용 yaml 파일 생성
 
    secretkey는 team4-pass
 
@@ -47,13 +47,13 @@ spec:
 
 
 
-3. 현재 secrets없음 확인
+c. 현재 secrets없음 확인
 
 ![](images/secret3.jpg)
 
 
 
-4. secret.yaml 적용
+d. secret.yaml 적용
 
    team4-pass 가 생성됨을 확인
 
@@ -62,18 +62,22 @@ spec:
 
 
 
-5. mysql 파트 생성(secret키 사용할 app)
+e. mysql 파트 생성(secret키 사용할 app)
 
 ![](images/secret5.jpg)
 
 
 
-6. pod 생성됨을 확인
+f. pod 생성됨을 확인
 
 ![](images/secret6.jpg)
 
 
 
-7. mysql pod에 들어가서 해당 secret 키 내용 확인 
+g. mysql pod에 들어가서 해당 secret 키 내용 확인 
 
 ![](images/secret7.jpg)
+
+```
+team4fighting이라는 secret으로 된 password 확인 가능
+```
