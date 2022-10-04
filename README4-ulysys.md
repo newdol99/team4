@@ -145,7 +145,6 @@
     - 상점주인이 확인하여 포장하고 배달 출발한다 (ok)
 
 <img src="https://raw.githubusercontent.com/newdol99/team4/main/img/design10.PNG"  width="700" height="320"/>
-
     - 고객이 주문을 취소할 수 있다 (ok)
     - 주문이 취소되면 배달이 취소된다 (ok)
     - 고객이 주문상태를 중간중간 조회한다 (View-green sticker 의 추가로 ok) 
@@ -485,65 +484,32 @@ http localhost:8082/orders     # 모든 주문의 상태가 "배송됨"으로 �
 
 
 ## 5. Circuit Breaker
+a. 
 
-Istio DestinationRule 설정을 통해, 장애가 감지된 서비스를 서비스 대상에서 일정시간 동안 제외(Pool Ejection)
-![image](images/5.get-po-1.jpg)
-
-Circuit Braker는 아래와 같이 설치
-```bash
-kubectl apply -f - << EOF
-  apiVersion: networking.istio.io/v1alpha3
-  kind: DestinationRule
-  metadata:
-    name: order
-    namespace: default
-  spec:
-    host: order
-    trafficPolicy:
-      outlierDetection:
-        consecutive5xxErrors: 1
-        interval: 1s
-        baseEjectionTime: 3m
-        maxEjectionPercent: 100
-EOF
-```
-
-테스트 
-
-1. 새로운 터미널에서 마지막에 출력된 Delivery 컨테이너로 접속하여 명시적으로 5xx 오류를 발생 시킨다.
-```
-kubectl exec -it pod/order-57d96474b6-22mnr  -n default -c order -- /bin/sh
-apk update
-apk add httpie
-http http://localhost:8080/actuator/health
-http PUT http://localhost:8080/actuator/down
-```
-![image](images/5.act-down.JPG)
-
-2. 새로운 터미널에서 siege 실행
-kubectl exec -it pod/siege -- /bin/bash
-![image](images/5.siege-1.JPG)
 
 ## 6. Gateway / Ingress
 
-- delivery 서비스
+### delivery 서비스 
 ![image](images/ingress_deliveries.jpg)
 
-- order 서비스         
+
+### order 서비스         
 ![image](images/ingress_orders.jpg)
 
-- payment 서비스                     
+### payment 서비스                     
 ![image](images/ingress_payments.jpg)
 
-- store 서비스                  
+### store 서비스                  
 ![image](images/ingress_stores.jpg)
                        
 
 ## 7. Deploy
 
-- AWS EKS에 배포되어 있는 pods
+AWS EKS에 배포되어 있는 pods
 
 ![image](images/deploy.jpg)
+
+
 
 
 
@@ -580,11 +546,8 @@ kubectl exec -it pod/siege -- /bin/bash
 ![](images/readiness-05-Readiness-req-02.jpg)
 
 
-
-
-
 ## 10. Secret
-- secret.yaml 파일 생성
+a. secret.yaml 파일 생성
 
 
 ```yaml
@@ -597,7 +560,7 @@ data:
   password: dGVhbTRmaWdodGluZw==
 ```
 
-- 해당 secret을 사용할 mysql pod용 yaml 파일 생성
+b. 해당 secret을 사용할 mysql pod용 yaml 파일 생성
 
    secretkey는 team4-pass
 
@@ -630,26 +593,26 @@ spec:
     emptyDir: {}
 ```
 
-- 현재 secrets없음 확인
+c. 현재 secrets없음 확인
 
 ![](images/secret3.jpg)
 
-- secret.yaml 적용
+d. secret.yaml 적용
 
    team4-pass 가 생성됨을 확인
 
 ![](images/secret4.jpg)
 
 
-- mysql 파드 생성(secret키 사용할 app)
+e. mysql 파트 생성(secret키 사용할 app)
 
 ![](images/secret5.jpg)
 
-- pod 생성됨을 확인
+f. pod 생성됨을 확인
 
 ![](images/secret6.jpg)
 
-- mysql pod에 들어가서 해당 secret 키 내용 확인 
+g. mysql pod에 들어가서 해당 secret 키 내용 확인 
 
 ![](images/secret7.jpg)
 
@@ -657,9 +620,7 @@ spec:
 team4fighting이라는 secret으로 된 password 확인 가능
 ```
                             
----
-# 아래는 샘플을 가져 왔습니다.
----
+
 
 ## 동기식 호출 / 서킷 브레이킹 / 장애격리
 
