@@ -404,7 +404,7 @@ siege -c15 -t30S -v -y http://order:8080/orders
 ```
 ![image](images/5.siege2.JPG)
 
-3. 다시 siege 실행 하면 오류가 발생하지 않음 (circuit braker 작동)
+3. 다시 siege 실행 하면 오류가 발생하지 않음 (circuit breaker 작동)
 ```
 siege -c15 -t30S -v -y http://order:8080/orders
 ```
@@ -427,7 +427,7 @@ helm install nginx-ingress ingress-nginx/ingress-nginx --namespace=ingress-basic
 ```bash
 kubectl get all --namespace=ingress-basic
 ```
-- shop Igress yaml 
+- shop Ingress yaml 
 ```yaml
 apiVersion: "extensions/v1beta1"
 kind: "Ingress"
@@ -488,7 +488,7 @@ spec:
 
 ## 7. Deploy
 
-AWS EKS에 배포되어 있는 pods
+- AWS EKS에 배포되어 있는 pods
 
 ![image](images/deploy.jpg)
 
@@ -531,7 +531,7 @@ AWS EKS에 배포되어 있는 pods
 
 
 ## 10. Secret
-a. secret.yaml 파일 생성
+- secret.yaml 파일 생성
 
 
 ```yaml
@@ -544,7 +544,7 @@ data:
   password: dGVhbTRmaWdodGluZw==
 ```
 
-b. 해당 secret을 사용할 mysql pod용 yaml 파일 생성
+- 해당 secret을 사용할 mysql pod용 yaml 파일 생성
 
    secretkey는 team4-pass
 
@@ -577,26 +577,26 @@ spec:
     emptyDir: {}
 ```
 
-c. 현재 secrets없음 확인
+- 현재 secrets없음 확인
 
 ![](images/secret3.jpg)
 
-d. secret.yaml 적용
+- secret.yaml 적용
 
    team4-pass 가 생성됨을 확인
 
 ![](images/secret4.jpg)
 
 
-e. mysql 파트 생성(secret키 사용할 app)
+- mysql 파트 생성(secret키 사용할 app)
 
 ![](images/secret5.jpg)
 
-f. pod 생성됨을 확인
+- pod 생성됨을 확인
 
 ![](images/secret6.jpg)
 
-g. mysql pod에 들어가서 해당 secret 키 내용 확인 
+- mysql pod에 들어가서 해당 secret 키 내용 확인 
 
 ![](images/secret7.jpg)
 
