@@ -285,7 +285,7 @@ OrderPlaced -> PaymentCompleted -> FlowerWapped -> DeliveryStarted
 ![image](https://raw.githubusercontent.com/newdol99/team4/main/img/1.order2-offline.JPG)
 ![image](https://raw.githubusercontent.com/newdol99/team4/main/img/1.order2-offline_kafka.JPG)
 
-- 
+
 ```
 OrderPlaced -> PaymentCompleted -> FlowerSold
 ```
