@@ -176,7 +176,11 @@
 
 분석/설계 단계에서 도출된 헥사고날 아키텍처에 따라, 각 BC별로 대변되는 마이크로 서비스들을 스프링부트와 파이선으로 구현하였다. 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (각자의 포트넘버는 8081 ~ 808n 이다)
 
+<<<<<<< HEAD
 ```bash
+=======
+```
+>>>>>>> b5e24bc7af1d6335df2c4c79e44e9f91418ebfe8
 cd order
 mvn spring-boot:run
 
@@ -194,7 +198,11 @@ mvn spring-boot:run
 
 - 각 서비스내에 도출된 핵심 Aggregate Root 객체를 Entity 로 선언하였다: (예시는 order 마이크로 서비스). 
 
+<<<<<<< HEAD
 ```java
+=======
+```
+>>>>>>> b5e24bc7af1d6335df2c4c79e44e9f91418ebfe8
 package team.domain;
 
 import team.domain.OrderPlaced;
@@ -242,6 +250,11 @@ public class Order  {
         return orderRepository;
     }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> b5e24bc7af1d6335df2c4c79e44e9f91418ebfe8
     public void cancelOrder(){
         OrderCancelled orderCancelled = new OrderCancelled(this);
         orderCancelled.publishAfterCommit();
@@ -289,6 +302,7 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 ![image](https://raw.githubusercontent.com/newdol99/team4/main/img/4.order3_outofstock.JPG)
 ![image](https://raw.githubusercontent.com/newdol99/team4/main/img/4.order3_outofstock_500error.JPG)
 
+<<<<<<< HEAD
          
 ![image](images/ingress_deliveries.jpg)
 ![image](images/ingress_orders.jpg)
@@ -296,10 +310,82 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 
 
 
+=======
+
+
+## 폴리글랏 퍼시스턴스
+
+앱프런트 (app) 는 서비스 특성상 많은 사용자의 유입과 상품 정보의 다양한 콘텐츠를 저장해야 하는 특징으로 인해 RDB 보다는 Document DB / NoSQL 계열의 데이터베이스인 Mongo DB 를 사용하기로 하였다. 이를 위해 order 의 선언에는 @Entity 가 아닌 @Document 로 마킹되었으며, 별다른 작업없이 기존의 Entity Pattern 과 Repository Pattern 적용과 데이터베이스 제품의 설정 (application.yml) 만으로 MongoDB 에 부착시켰다
+
+```
+# Order.java
+
+package fooddelivery;
+
+@Document
+public class Order {
+
+    private String id; // mongo db 적용시엔 id 는 고정값으로 key가 자동 발급되는 필드기 때문에 @Id 나 @GeneratedValue 를 주지 않아도 된다.
+    private String item;
+    private Integer 수량;
+
+}
+
+
+# 주문Repository.java
+package fooddelivery;
+
+public interface 주문Repository extends JpaRepository<Order, UUID>{
+}
+
+# application.yml
+
+  data:
+    mongodb:
+      host: mongodb.default.svc.cluster.local
+    database: mongo-example
+
+```
+
+## 폴리글랏 프로그래밍
+
+고객관리 서비스(customer)의 시나리오인 주문상태, 배달상태 변경에 따라 고객에게 카톡메시지 보내는 기능의 구현 파트는 해당 팀이 python 을 이용하여 구현하기로 하였다. 해당 파이썬 구현체는 각 이벤트를 수신하여 처리하는 Kafka consumer 로 구현되었고 코드는 다음과 같다:
+```
+from flask import Flask
+from redis import Redis, RedisError
+from kafka import KafkaConsumer
+import os
+import socket
+
+
+# To consume latest messages and auto-commit offsets
+consumer = KafkaConsumer('fooddelivery',
+                         group_id='',
+                         bootstrap_servers=['localhost:9092'])
+for message in consumer:
+    print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
+                                          message.offset, message.key,
+                                          message.value))
+
+    # 카톡호출 API
+```
+
+파이선 애플리케이션을 컴파일하고 실행하기 위한 도커파일은 아래와 같다 (운영단계에서 할일인가? 아니다 여기 까지가 개발자가 할일이다. Immutable Image):
+```
+FROM python:2.7-slim
+WORKDIR /app
+ADD . /app
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
+ENV NAME World
+EXPOSE 8090
+CMD ["python", "policy-handler.py"]
+```
+>>>>>>> b5e24bc7af1d6335df2c4c79e44e9f91418ebfe8
 
 
 ## 동기식 호출 과 Fallback 처리
 
+<<<<<<< HEAD
 분석단계에서의 조건 중 하나로 주문(order) -> 상점(store) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다. 
 
 
@@ -320,6 +406,38 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
         OrderPlaced orderPlaced = new OrderPlaced(this);
         orderPlaced.publishAfterCommit();
 
+=======
+분석단계에서의 조건 중 하나로 주문(app)->결제(pay) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다. 호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다. 
+
+- 결제서비스를 호출하기 위하여 Stub과 (FeignClient) 를 이용하여 Service 대행 인터페이스 (Proxy) 를 구현 
+
+```
+# (app) 결제이력Service.java
+
+package fooddelivery.external;
+
+@FeignClient(name="pay", url="http://localhost:8082")//, fallback = 결제이력ServiceFallback.class)
+public interface 결제이력Service {
+
+    @RequestMapping(method= RequestMethod.POST, path="/결제이력s")
+    public void 결제(@RequestBody 결제이력 pay);
+
+}
+```
+
+- 주문을 받은 직후(@PostPersist) 결제를 요청하도록 처리
+```
+# Order.java (Entity)
+
+    @PostPersist
+    public void onPostPersist(){
+
+        fooddelivery.external.결제이력 pay = new fooddelivery.external.결제이력();
+        pay.setOrderId(getOrderId());
+        
+        Application.applicationContext.getBean(fooddelivery.external.결제이력Service.class)
+                .결제(pay);
+>>>>>>> b5e24bc7af1d6335df2c4c79e44e9f91418ebfe8
     }
 ```
 
@@ -327,6 +445,7 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 
 
 ```
+<<<<<<< HEAD
 # 상점 (store) 서비스를 잠시 내려놓음 (ctrl+c)
 
 #주문처리
@@ -340,19 +459,45 @@ mvn spring-boot:run
 #주문처리
 http POST :8082/orders flowerId=1 qty=2 address="pusan" isOffline=false phoneNumber="01012345678" price="20000"
 http POST :8082/orders flowerId=1 qty=1 address="seoul" isOffline=false phoneNumber="01012345678" price="10000"
+=======
+# 결제 (pay) 서비스를 잠시 내려놓음 (ctrl+c)
+
+#주문처리
+http localhost:8081/orders item=통닭 storeId=1   #Fail
+http localhost:8081/orders item=피자 storeId=2   #Fail
+
+#결제서비스 재기동
+cd 결제
+mvn spring-boot:run
+
+#주문처리
+http localhost:8081/orders item=통닭 storeId=1   #Success
+http localhost:8081/orders item=피자 storeId=2   #Success
+>>>>>>> b5e24bc7af1d6335df2c4c79e44e9f91418ebfe8
 ```
 
 - 또한 과도한 요청시에 서비스 장애가 도미노 처럼 벌어질 수 있다. (서킷브레이커, 폴백 처리는 운영단계에서 설명한다.)
 
+<<<<<<< HEAD
         
 ## 비동기식 호출 / 시간적 디커플링 / 장애격리 / 최종 (Eventual) 일관성 테스트
 
 
 주문이 이루어진 후에 결재시스템으로 이를 알려주는 행위는 동기식이 아니라 비 동기식으로 처리하여 상점 시스템의 처리를 위하여 결제주문이 블로킹 되지 않아도록 처리한다.
+=======
+
+
+
+## 비동기식 호출 / 시간적 디커플링 / 장애격리 / 최종 (Eventual) 일관성 테스트
+
+
+결제가 이루어진 후에 상점시스템으로 이를 알려주는 행위는 동기식이 아니라 비 동기식으로 처리하여 상점 시스템의 처리를 위하여 결제주문이 블로킹 되지 않아도록 처리한다.
+>>>>>>> b5e24bc7af1d6335df2c4c79e44e9f91418ebfe8
  
 - 이를 위하여 결제이력에 기록을 남긴 후에 곧바로 결제승인이 되었다는 도메인 이벤트를 카프카로 송출한다(Publish)
  
 ```
+<<<<<<< HEAD
 @Entity
 @Table(name="Payment_table")
 @Data
@@ -365,10 +510,28 @@ public class Payment  {
     public void onPostPersist(){
 
     }
+=======
+package fooddelivery;
+
+@Entity
+@Table(name="결제이력_table")
+public class 결제이력 {
+
+ ...
+    @PrePersist
+    public void onPrePersist(){
+        결제승인됨 결제승인됨 = new 결제승인됨();
+        BeanUtils.copyProperties(this, 결제승인됨);
+        결제승인됨.publish();
+    }
+
+}
+>>>>>>> b5e24bc7af1d6335df2c4c79e44e9f91418ebfe8
 ```
 - 상점 서비스에서는 결제승인 이벤트에 대해서 이를 수신하여 자신의 정책을 처리하도록 PolicyHandler 를 구현한다:
 
 ```
+<<<<<<< HEAD
 @Service
 @Transactional
 public class PolicyHandler{
@@ -387,6 +550,26 @@ public class PolicyHandler{
             // Sample Logic //
             Store.ifOnlineOrder(event);
         }       
+=======
+package fooddelivery;
+
+...
+
+@Service
+public class PolicyHandler{
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void whenever결제승인됨_주문정보받음(@Payload 결제승인됨 결제승인됨){
+
+        if(결제승인됨.isMe()){
+            System.out.println("##### listener 주문정보받음 : " + 결제승인됨.toJson());
+            // 주문 정보를 받았으니, 요리를 슬슬 시작해야지..
+            
+        }
+    }
+
+}
+>>>>>>> b5e24bc7af1d6335df2c4c79e44e9f91418ebfe8
 
 ```
 실제 구현을 하자면, 카톡 등으로 점주는 노티를 받고, 요리를 마친후, 주문 상태를 UI에 입력할테니, 우선 주문정보를 DB에 받아놓은 후, 이후 처리는 해당 Aggregate 내에서 하면 되겠다.:
@@ -778,3 +961,7 @@ Request/Response 방식으로 구현하지 않았기 때문에 서비스가 더�
         **/
     }
 ```
+<<<<<<< HEAD
+=======
+
+>>>>>>> b5e24bc7af1d6335df2c4c79e44e9f91418ebfe8
